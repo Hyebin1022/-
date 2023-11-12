@@ -1,5 +1,3 @@
-import re
-
 def solution(myStr):
-    answer = re.sub("[a-c]", " ", myStr).split()
-    return answer if len(answer) > 0 else ["EMPTY"]
+    answer = [x for x in myStr.replace('a', ' ').replace('b', ' ').replace('c', ' ').split() if x]
+    return answer if answer else ['EMPTY']
