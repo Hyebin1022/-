@@ -1,0 +1,7 @@
+original_string = input()
+reversed_string = original_string[::-1]  # 이거 암기하기
+
+if original_string==reversed_string:
+    print("1")
+else:
+    print("0")
