@@ -1,0 +1,14 @@
+# 알파벳을 대문자로 출력한다. 단, 가장 많이 사용된 알파벳이 여러 개 존재하는 경우에는 ?
+word = input().upper()
+word_list = list(set(word))
+
+cnt = [] # 각 문자의 등장 횟수를 저장
+for i in word_list:
+  count = word.count # count 변수에 문자의 등장 횟수를 세는 함수 word.count 할당
+  cnt.append(count(i))
+
+if cnt.count(max(cnt)) > 1:
+  print("?")
+
+else:
+  print(word_list[(cnt.index(max(cnt)))])
