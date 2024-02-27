@@ -1,0 +1,5 @@
+n_list = [1, 1, 2, 2, 2, 8] # 기본값 넣기
+y_list = list(map(int,input().split())) # 입력받은거 리스트로 바꾸기
+
+for i in range(6):
+    print(n_list[i] - y_list[i], end=' ')
