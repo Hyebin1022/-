@@ -1,4 +1,4 @@
-N,M = map(int, input().split())
+N,M = map(int, input().split()) #행렬 크기 입력받기
  
 A,B = [],[]
  
