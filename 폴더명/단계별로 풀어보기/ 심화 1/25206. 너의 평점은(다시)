@@ -10,5 +10,5 @@ for i in range(20) :  # 입력을 20번 받아와야하니깐 for문 사용
         total += p
         result += p * grade[rating.index(g)] #index는 리스트에서 특정 요소 위치 반환하는 함수
 
-# 예제를 살펴보면 소수점 6번째 자리까지 표현이 되어 있다. 이 또한 반영함 
+# 예제를 살펴보면 소수점 6번째 자리까지 표현이 되어 있음
 print(format(result / total, ".6f"))
