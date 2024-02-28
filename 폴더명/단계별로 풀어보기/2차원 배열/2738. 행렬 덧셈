@@ -2,11 +2,12 @@ N,M = map(int, input().split()) #행렬 크기 입력받기
  
 A,B = [],[]
  
- 
+# 행렬 A 입력받기
 for i in range(N):
     a = list(map(int,input().split()))
     A.append(a)
-        
+
+# 행렬 B 입력받기
 for i in range(N):
     b = list(map(int,input().split()))
     B.append(b)
