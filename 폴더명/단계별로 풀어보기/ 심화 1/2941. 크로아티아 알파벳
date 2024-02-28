@@ -1,0 +1,8 @@
+croatia = ['c=', 'c-', 'dz=', 'd-', 'lj', 'nj', 's=', 'z=']
+word = input()
+
+for i in croatia :
+    word = word.replace(i, '*')  
+print(len(word))
+
+# 결론적으로 *의 갯수를 세개 되는 것이다. 
