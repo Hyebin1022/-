@@ -1,19 +1,18 @@
-# 9줄
-aa = 0  # []를 사용하면 리스트에 +- 사용 못함
-bb=[1,2,3,4,5,6,7,8,9]
+table = []         # append 사용해야하므로 리스트 정의
+for _ in range(9):
+    row = list(map(int, input().split()))
+    table.append(row)   # + 사용하면 리스트를 리스트에 더하는게 아니라 요소를 펼쳐서 더하는 연산이 된다.
 
-for i in range(9):
-    aa += map(int, input().split())
-
-# 가장 큰 넘버와 그것의 위치 찾기
-max_mum = 0
+# 가장 큰 넘버와 그것의 위치를 찾아줍니다.
+max_num = 0
 max_row, max_col = 0, 0
 
-for row in range(9):
+for row in range(9):  # 0~8까지의 정수 생성
     for col in range(9):
-        if max_num <= aa[row][col]:
-            max_row, max_col = row + 1 , col + 1
+        if max_num <= table[row][col]:   # 갱신
+            max_row, max_col = row + 1, col + 1 # 예시 위치는 1부터 시작하므로 +1
             max_num = table[row][col]
 
+# 출력
 print(max_num)
 print(max_row, max_col)
