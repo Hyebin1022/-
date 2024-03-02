@@ -4,7 +4,7 @@ for i in range(5):
     word.append(input())
     
 for i in range(max(len(e) for e in word)): # 총 세로줄 몇갠지
-    for j in range(5): # 가로줄은 5개
+    for j in range(5): 
         if i < len(word[j]):
             print(word[j][i],end = '') 
 
