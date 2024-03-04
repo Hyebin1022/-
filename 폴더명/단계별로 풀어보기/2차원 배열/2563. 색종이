@@ -1,1 +1,18 @@
-volume = int(input())
+volume = int(input())  # 색종이 장 수 
+paper = [[0 for _ in range(100)] for _ in range(100)] # 도화지 넓이, 100*100
+## for _ in range(100):
+    # 반복 변수의 값이 여기서 사용되지 않음
+    # 어떤 작업을 수행
+
+for _ in range(volume):
+    x,y = map(int,input().split())
+    for _x in range(x,x + 10):   # 가로
+        for _y in range(y,y + 10):  # 세로
+            if _x >= 100 or _y >= 100:
+                break
+            paper[_x][_y] = 1
+sum = 0
+for row in range(100):
+    sum += paper[row].count(1)  # 값이 1인 셀의 개수 세기
+
+print(sum)
