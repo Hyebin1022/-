@@ -1,1 +1,4 @@
-aa
+n,b = map(str, input().split())
+print(int(n,int(b)))
+
+# 파이썬에선 int를 사용하면 알아서 b진법을 10진법으로 숫자를 풀어준다고 한다.
