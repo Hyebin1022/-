@@ -1,0 +1,11 @@
+# 0부터 35까지의 숫자와 알파벳 대문자를 나타내는 문자열
+num_list = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+n, b = map(int, input().split())
+answer = ""
+
+while n != 0:
+    answer = num_list[n % b] + answer
+    n //= b    # n을 b로 나눈 몫을 새로운 값으로 업데이트하는 연산
+
+print(answer)
