@@ -1,0 +1,30 @@
+############################################################# 1번
+
+# set.seed() 함수를 사용하여 재현 가능한 결과를 얻습니다.
+set.seed(1)
+
+# sample() 함수를 사용하여 주사위 던지기를 시뮬레이션합니다.
+dice_results <- sample(1:6, 1000000, replace=TRUE)
+
+# 결과를 출력합니다.
+print(dice_results)
+
+# 숫자변환
+to_num <- 1 * (dice_results > 5)  # 5보다 큰 경우 1로, 그 외에는 0으로 변환합니다.
+
+
+#########################
+
+
+throws_to_6 <- numeric()  # 6이 나올 때까지 던진 횟수를 저장할 벡터를 초기화합니다.
+
+throws <- 0  # 주사위를 던진 횟수를 저장하는 변수를 초기화합니다.
+for (result in to_num) {
+  throws <- throws + 1
+  if (result == 1) {
+    throws_to_6 <- c(throws_to_6, throws)  # 6이 나올 때까지의 던진 횟수를 벡터에 추가합니다.
+    throws <- 0  # 다시 시행 횟수 초기화
+  }
+}
+
+mean_throws <- mean(throws_to_6)  # 6이 나올 때까지의 평균 던진 횟수를 계산합니다.
