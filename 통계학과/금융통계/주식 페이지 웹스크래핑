@@ -1,0 +1,214 @@
+##########################################################################################################################################코스피########
+# rvest 패키지 설치
+install.packages("rvest")
+library(rvest)
+
+# 특정 페이지에서 데이터를 스크래핑하는 함수 정의
+scrape_page <- function(page_number) {
+  # 페이지에 해당하는 URL 생성
+  base <- "https://finance.naver.com/sise/sise_market_sum.nhn?&page="
+  url <- paste0(base, page_number)
+  # 해당 페이지의 HTML 읽어오기
+  html <- read_html(url, encoding = "euc-kr")
+  
+  # HTML에서 테이블 요소 추출
+  tables <- html %>% html_elements("table")
+  sise <- tables[2] %>% html_elements("td")
+  
+  # 텍스트 데이터 추출 및 정리
+  data <- sise %>% html_text()
+  data <- gsub("\\t|\\n", "", data)
+  data <- data[data != ""]
+  
+  # 데이터프레임으로 변환
+  sise_df <- data.frame(matrix(data, ncol = 12, byrow = TRUE), stringsAsFactors = FALSE)
+  
+  # 컬럼 이름 지정
+  item_name <- c("N", "종목명", "현재가", "전일비", "등락률", "액면가", "시가총액", "상장주식수", "외국인비율", "거래량", "PER", "ROE")
+  names(sise_df) <- item_name
+  
+  # 필요한 컬럼에 대해 쉼표 제거
+  for (i in c(3, 4, 6, 7, 8, 10)) {
+    sise_df[[i]] <- gsub(",", "", sise_df[[i]])
+  }
+  
+  return(sise_df)
+}
+
+# 페이지 끝 정의
+html <- read_html(url, encoding="euc-kr")
+
+table <- html %>% html_nodes("table")
+
+len <- table[3] %>% 
+  html_nodes("td") %>% 
+  html_node("a") %>%  
+  html_attr("href") %>% 
+  strsplit("=") %>% 
+  unlist() %>% 
+  tail(1)
+
+
+
+# 전체 페이지 범위 데이터 스크래핑
+all_data <- data.frame(matrix(ncol = 12, nrow = 0))
+names(all_data) <- item_name
+
+for (page_number in 1:as.numeric(len)) {
+  # 각 페이지에 대한 데이터 스크래핑
+  page_data <- scrape_page(page_number)
+  
+  # 전체 데이터프레임에 행으로 추가
+  all_data <- rbind(all_data, page_data)
+}
+
+# 스크래핑한 전체 데이터 확인
+View(all_data)
+
+
+# all_data에서 종목명과 액면가 열 추출
+selected_data <- all_data[, c("종목명", "액면가")]
+
+# 새로운 데이터프레임 확인
+View(selected_data)
+
+################################################### 종목코드
+
+# 특정 페이지에서 코드를 추출하는 함수 정의
+extract_codes <- function(page_number) {
+  url <- paste0("https://finance.naver.com/sise/sise_market_sum.nhn?&page=", page_number)
+  html <- read_html(url, encoding = "euc-kr")
+  
+  tables <- html %>%
+    html_nodes("table")
+  
+  # 이전 코드와 동일한 논리로 코드 추출
+  hrefs <- tables[2] %>%
+    html_nodes("a") %>%
+    html_attr("href")
+  
+  codes <- substr(hrefs, nchar(hrefs) - 5, nchar(hrefs))
+  stock_code <- codes[c(TRUE, FALSE)]
+  
+  return(stock_code)
+}
+
+# 여러 페이지에서 코드 추출 (예: 1페이지부터 44페이지까지)
+all_stock_codes <- character(0)  # 모든 코드를 저장할 빈 벡터 초기화
+
+for (page_number in 1:44) {
+  codes_on_page <- extract_codes(page_number)
+  all_stock_codes <- c(all_stock_codes, codes_on_page)
+}
+
+# 추출된 주식 코드 출력
+print(all_stock_codes)
+
+################################################# 둘이 합체
+
+final <- cbind(selected_data, all_stock_codes)
+names(final)[names(final) == "all_stock_codes"] <- "code"
+View(final)
+
+#### csv 파일로 저장
+save_path <- "C:/Users/com/Documents/Desktop/금통과제.csv"
+
+################################################################################################################################################코스닥##
+
+# rvest 패키지 설치
+library(rvest)
+
+# 특정 페이지에서 데이터를 스크래핑하는 함수 정의
+scrape_page <- function(page_number, market_type) {
+  # 페이지에 해당하는 URL 생성
+  url <- paste0("https://finance.naver.com/sise/sise_market_sum.naver?sosok=", market_type, "&page=", page_number)
+  # 해당 페이지의 HTML 읽어오기
+  html <- read_html(url, encoding = "euc-kr")
+  
+  # HTML에서 테이블 요소 추출
+  tables <- html %>% html_elements("table")
+  sise <- tables[2] %>% html_elements("td")
+  
+  # 텍스트 데이터 추출 및 정리
+  data <- sise %>% html_text()
+  data <- gsub("\\t|\\n", "", data)
+  data <- data[data != ""]
+  
+  # 데이터프레임으로 변환
+  sise_df <- data.frame(matrix(data, ncol = 12, byrow = TRUE), stringsAsFactors = FALSE)
+  
+  # 컬럼 이름 지정
+  item_name <- c("N", "종목명", "현재가", "전일비", "등락률", "액면가", "시가총액", "상장주식수", "외국인비율", "거래량", "PER", "ROE")
+  names(sise_df) <- item_name
+  
+  # 필요한 컬럼에 대해 쉼표 제거
+  for (i in c(3, 4, 6, 7, 8, 10)) {
+    sise_df[[i]] <- gsub(",", "", sise_df[[i]])
+  }
+  
+  return(sise_df)
+}
+
+# 전체 페이지 범위(1부터 35까지)에서 데이터 스크래핑 (코스닥: sosok=1)
+all_data_kosdaq <- data.frame(matrix(ncol = 12, nrow = 0))
+names(all_data_kosdaq) <- item_name
+
+for (page_number in 1:35) {
+  # 각 페이지에 대한 데이터 스크래핑 (코스닥: sosok=1)
+  page_data_kosdaq <- scrape_page(page_number, market_type = 1)
+  
+  # 전체 데이터프레임에 행으로 추가
+  all_data_kosdaq <- rbind(all_data_kosdaq, page_data_kosdaq)
+}
+
+
+# all_data_kosdaq에서 종목명과 액면가 열 추출
+selected_data_kosdaq <- all_data_kosdaq[, c("종목명", "액면가")]
+
+
+# 특정 페이지에서 코드를 추출하는 함수 정의
+extract_codes <- function(page_number, sosok) {
+  url <- paste0("https://finance.naver.com/sise/sise_market_sum.naver?sosok=", sosok, "&page=", page_number)
+  html <- read_html(url, encoding = "euc-kr")
+  
+  tables <- html %>%
+    html_nodes("table")
+  
+  # 이전 코드와 동일한 논리로 코드 추출
+  hrefs <- tables[2] %>%
+    html_nodes("a") %>%
+    html_attr("href")
+  
+  codes <- substr(hrefs, nchar(hrefs) - 5, nchar(hrefs))
+  stock_code <- codes[c(TRUE, FALSE)]
+  
+  return(stock_code)
+}
+
+# 여러 페이지에서 코드 추출 (예: 1페이지부터 35페이지까지, 코스닥의 경우 sosok=1)
+code <- character(0)  # 모든 코드를 저장할 빈 벡터 초기화
+sosok_kosdaq <- 1  # 코스닥의 경우 sosok=1
+
+for (page_number in 1:35) {
+  codes_on_page_kosdaq <- extract_codes(page_number, sosok_kosdaq)
+  code <- c(code, codes_on_page_kosdaq)
+}
+
+# 추출된 코스닥 주식 코드 출력
+print(code)
+View(code)
+
+
+################################################# 둘이 합체
+
+final <- cbind(selected_data_kosdaq, code)
+View(final)
+
+#### csv 파일로 저장
+save_path <- file.path(Sys.getenv("USERPROFILE"), "Desktop", "final_data.csv")
+
+# 데이터프레임을 CSV 파일로 저장
+write.csv(final, file = save_path, row.names = FALSE)
+
+# 저장된 파일 경로 출력
+cat("CSV 파일이 바탕화면에 저장되었습니다. 경로:", save_path, "\n")
