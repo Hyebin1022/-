@@ -1,9 +1,0 @@
-room=int(input()) #방 번호 받기 
-nums = 1 # 1번 벌집 번호
-
-for i in range(room):
-    nums += i*6         ## i번째 줄의 벌집 개수는 6의 배수로 늘어난다.
-    
-    if room <= nums:
-        print(i+1)
-        break
